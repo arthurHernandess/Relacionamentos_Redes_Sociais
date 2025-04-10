@@ -20,11 +20,12 @@
 
 typedef int bool;
 
+/* grafo com representação em matriz de adjacência, não-direcionado, não-ponderado */
 typedef struct {
     int numVertices;
     int numArestas;
-    bool** matriz;
-    int** caracteristicas;
+    bool** matriz; // matriz de adjacência, representando todos os relacionamentos (booleano)
+    int** caracteristicas;  // matriz de características de cada usuário -> são v vertices por 10 caracteristicas (fixo)  
 } Grafo;
 
 void printf123(){
@@ -103,7 +104,6 @@ bool removeAresta(Grafo* g, int v1, int v2){
   return true;
 }
 
-/* Funcao que adiciona atualiza o valor de da caracteristica c do vertice v. */
 bool atualizaCaracteristica(Grafo* g, int v, int c, int valor){
   if (!g || v < 0 || c < 0 || v >= g->numVertices || c >= NUM_CARACT || valor<-1) return false;
   g->caracteristicas[v][c] = valor;
@@ -115,7 +115,6 @@ bool arestaExiste(Grafo* g, int v1, int v2){
   return true;
 }
 
-/* Funcao que cria um grafo com o numero de vertices e numero de arestas passados como parametro e retorna seu endereco. */
 Grafo* criaGrafoAleatorio(int numVertices, int numArestas){
   printf("### Criando grafo: v=%i e a=%i ###\n",numVertices, numArestas);
   int x, y, a = 0;
@@ -187,11 +186,28 @@ void exibeArranjoInteiros(int* arranjo, int n){
   printf("\n\n");
 }
 
+void zerarArray(int* array, int n){
+  if(array == NULL || n <= 0) return;
+  for(int g = 0; g < n; g++){
+    array[g] = 0;
+  }
+}
+
 /* --------------------------------------------------------------------------------------------------------------- */
 
-/* Funcao que calcula a homofilia entre o vertice v e os demais */
 void homofilia(Grafo* g, int v, int* valores) {
-  /* COMPLETE/IMPLEMENTE ESTA FUNCAO */
+  // 'valores' eh um array de todos os vertices, que eu devo preencher cada indice (inclusive o do próprio v) com a quantidade de características em comum com o vertice v. Só toamr cuidado pois -1 é não preenchido e nao pode ser considerado caracteristica em comum
+  if(g == NULL || v >= g->numVertices || valores == NULL) return;
+  zerarArray(valores, g->numVertices);
+  
+  for(int i = 0; i < g->numVertices; i++){
+    for(int j = 0; j < 10; j++){
+      if(g->caracteristicas[i][j] == g->caracteristicas[v][j] && g->caracteristicas[i][j] != -1){
+        valores[i]++;
+      }
+    }
+  }
+  return;
 }
 
 /* Funcao que pondera as caracteristicas comuns entre o vertice v e os demais de acordo com sua raridade. */
@@ -255,7 +271,14 @@ void testaFuncoes(Grafo* g, int n, int v){
   free(valoresReais);
 }
 
-int main() {
+int main(){
+  Grafo g;
+  inicializaGrafo(&g, 5);
+  // exibeGrafo(&g);
+  liberaGrafo(&g);
+}
+
+/*int main() {
   int n = 5;
   int* valoresInteiros = (int*)malloc(sizeof(int)*n);
   double* valoresReais = (double*)malloc(sizeof(double)*n);
@@ -302,4 +325,4 @@ int main() {
   liberaGrafo(&g1);
   liberaGrafo(g2);
   return 0;  
-}
+}*/
