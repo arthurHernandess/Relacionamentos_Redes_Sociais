@@ -193,6 +193,23 @@ void zerarArray(int* array, int n){
   }
 }
 
+void zerarArrayDouble(double* array, int n){
+	if(array == NULL || n <= 0) return;
+	for(int h = 0; h < n; h++){
+		array[h] = 0.00;
+	}
+}
+
+void homofiliaPonderada(Grafo* g, int v, double* valores, int* pesos){
+	for(int i = 0; i < g->numVertices; i++){
+    for(int j = 0; j < NUM_CARACT; j++){
+      if(g->caracteristicas[i][j] == g->caracteristicas[v][j] && g->caracteristicas[i][j] != -1){
+        valores[i] = (double)1/pesos[j] + valores[i];
+      }
+    }
+  }
+}
+
 /* --------------------------------------------------------------------------------------------------------------- */
 
 void homofilia(Grafo* g, int v, int* valores) {
@@ -210,13 +227,21 @@ void homofilia(Grafo* g, int v, int* valores) {
   return;
 }
 
-/* Funcao que pondera as caracteristicas comuns entre o vertice v e os demais de acordo com sua raridade. */
 void raridade(Grafo* g, int v, double* valores) {
   if(g == NULL || v >= g->numVertices || valores == NULL) return;
-	zerarArray(valores, g->numVertices);
+	zerarArrayDouble(valores, g->numVertices);
 
+	int* repeticoes = (int*)calloc(NUM_CARACT, sizeof(int)); // conta a quantidade de repetições que o valor da característica y tem entre o vertice v e os outros
+	for(int j = 0; j < NUM_CARACT; j++){	//	roda a matriz verticalmente
+		for(int i = 0; i < g->numArestas; i++){
+			if(g->caracteristicas[v][j] == g->caracteristicas[i][j] && g->caracteristicas[i][j] > -1){
+				repeticoes[j]++;
+			}	
+		}
+	}
+
+	homofiliaPonderada(g, v , valores, repeticoes);
 }  
-
 
 /* Funcao que da mais pesos as caracteristicas mais presentes nos amigos do vertice v e calcula a influencia social entre o vertice v e os demais */
 void influenciaSocial(Grafo* g, int v, int* valores) {
@@ -284,14 +309,40 @@ int main(){
   insereAresta(&g1,2,3);
   atualizaCaracteristica(&g1, 0, 2, 2);
   atualizaCaracteristica(&g1, 0, 1, 1);
+  atualizaCaracteristica(&g1, 0, 5, 10);
+  atualizaCaracteristica(&g1, 0, 7, 2);
   atualizaCaracteristica(&g1, 1, 1, 1);
   atualizaCaracteristica(&g1, 1, 2, 2);
   atualizaCaracteristica(&g1, 1, 3, 3);
+  atualizaCaracteristica(&g1, 1, 5, 11);
+  atualizaCaracteristica(&g1, 1, 7, 2);
+  atualizaCaracteristica(&g1, 2, 0, 7);
   atualizaCaracteristica(&g1, 2, 2, 2);
-  atualizaCaracteristica(&g1, 3, 2, 2);
+  atualizaCaracteristica(&g1, 2, 6, 6);
+  atualizaCaracteristica(&g1, 2, 8, 4);
+  atualizaCaracteristica(&g1, 2, 5, 10);
+  atualizaCaracteristica(&g1, 3, 0, 7);
+  atualizaCaracteristica(&g1, 3, 2, 9);
+  atualizaCaracteristica(&g1, 3, 8, 4);
+  atualizaCaracteristica(&g1, 3, 5, 11);
+  atualizaCaracteristica(&g1, 3, 6, 6);
+  atualizaCaracteristica(&g1, 3, 9, 0);
   atualizaCaracteristica(&g1, 4, 3, 3);
   atualizaCaracteristica(&g1, 4, 2, 5);
   atualizaCaracteristica(&g1, 4, 4, 4);
+  atualizaCaracteristica(&g1, 4, 6, 4);
+  atualizaCaracteristica(&g1, 4, 7, 2);
+  atualizaCaracteristica(&g1, 4, 5, 11);
+  atualizaCaracteristica(&g1, 4, 9, 0);
+	
+	int* valoresInteiros = (int*)malloc(sizeof(int)*5);
+	homofilia(&g1, 3, valoresInteiros);
+	exibeArranjoInteiros(valoresInteiros, 5);
+	
+	double* valoresReais = (double*)malloc(sizeof(double)*5);
+	raridade(&g1, 0, valoresReais);
+	exibeArranjoReais(valoresReais, 5);
+	
   exibeGrafo(&g1);
   liberaGrafo(&g1);
 }
@@ -340,7 +391,7 @@ int main(){
   exibeGrafo(g2);
   testaFuncoes(g2, n, 1);
 
-  liberaGrafo(&g1);
+	liberaGrafo(&g1);
   liberaGrafo(g2);
   return 0;  
 }*/
