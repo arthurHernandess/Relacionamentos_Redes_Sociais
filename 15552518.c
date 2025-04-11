@@ -20,8 +20,8 @@
 
 typedef int bool;
 
-/* grafo com representação em matriz de adjacência, não-direcionado, não-ponderado */
 typedef struct {
+  /* grafo com representação de matriz de adjacência, não-direcionado e não-ponderado */
     int numVertices;
     int numArestas;
     bool** matriz; // matriz de adjacência, representando todos os relacionamentos (booleano)
@@ -201,7 +201,7 @@ void homofilia(Grafo* g, int v, int* valores) {
   zerarArray(valores, g->numVertices);
   
   for(int i = 0; i < g->numVertices; i++){
-    for(int j = 0; j < 10; j++){
+    for(int j = 0; j < NUM_CARACT; j++){
       if(g->caracteristicas[i][j] == g->caracteristicas[v][j] && g->caracteristicas[i][j] != -1){
         valores[i]++;
       }
@@ -212,8 +212,11 @@ void homofilia(Grafo* g, int v, int* valores) {
 
 /* Funcao que pondera as caracteristicas comuns entre o vertice v e os demais de acordo com sua raridade. */
 void raridade(Grafo* g, int v, double* valores) {
-  /* COMPLETE/IMPLEMENTE ESTA FUNCAO */
-}
+  if(g == NULL || v >= g->numVertices || valores == NULL) return;
+	zerarArray(valores, g->numVertices);
+
+}  
+
 
 /* Funcao que da mais pesos as caracteristicas mais presentes nos amigos do vertice v e calcula a influencia social entre o vertice v e os demais */
 void influenciaSocial(Grafo* g, int v, int* valores) {
@@ -272,10 +275,25 @@ void testaFuncoes(Grafo* g, int n, int v){
 }
 
 int main(){
-  Grafo g;
-  inicializaGrafo(&g, 5);
-  // exibeGrafo(&g);
-  liberaGrafo(&g);
+  Grafo g1;
+  inicializaGrafo(&g1, 5);
+	insereAresta(&g1,0,1);
+  insereAresta(&g1,0,2);
+  insereAresta(&g1,1,4);
+  insereAresta(&g1,1,3);
+  insereAresta(&g1,2,3);
+  atualizaCaracteristica(&g1, 0, 2, 2);
+  atualizaCaracteristica(&g1, 0, 1, 1);
+  atualizaCaracteristica(&g1, 1, 1, 1);
+  atualizaCaracteristica(&g1, 1, 2, 2);
+  atualizaCaracteristica(&g1, 1, 3, 3);
+  atualizaCaracteristica(&g1, 2, 2, 2);
+  atualizaCaracteristica(&g1, 3, 2, 2);
+  atualizaCaracteristica(&g1, 4, 3, 3);
+  atualizaCaracteristica(&g1, 4, 2, 5);
+  atualizaCaracteristica(&g1, 4, 4, 4);
+  exibeGrafo(&g1);
+  liberaGrafo(&g1);
 }
 
 /*int main() {
