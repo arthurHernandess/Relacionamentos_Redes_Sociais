@@ -210,6 +210,11 @@ void homofiliaPonderada(Grafo* g, int v, double* valores, int* pesos){
   }
 }
 
+int* caracteristicaVizinhosGrauUm(Grafo* g, int v, int i, int* pesos){
+  //se eu receber i = 0, eu tenho q preencher 'pesos' com a quantidade de vizinhos de v que tem a mesma característica de 0
+  
+}
+
 /* --------------------------------------------------------------------------------------------------------------- */
 
 void homofilia(Grafo* g, int v, int* valores) {
@@ -244,8 +249,25 @@ void raridade(Grafo* g, int v, double* valores) {
 }  
 
 /* Funcao que da mais pesos as caracteristicas mais presentes nos amigos do vertice v e calcula a influencia social entre o vertice v e os demais */
+// AINDA NÃO TÁ CERTA!!!!!!!!!!!!!
 void influenciaSocial(Grafo* g, int v, int* valores) {
-  /* COMPLETE/IMPLEMENTE ESTA FUNCAO */
+  if(g == NULL || v >= g->numVertices || valores == NULL) return;
+	zerarArray(valores, g->numVertices);
+
+  int* caract_vizinhos = (int*)calloc(g->numVertices, sizeof(int));
+  int vizinho_anterior = 0;
+
+  for(int i = 0; i < g->numVertices; i++){  // a posição "fixa" q eu vou preencher o array 'valores'
+    for(int j = 0; j < 10; j++){  
+      for(int k = 0; k < g->numVertices; k++){
+        if(g->matriz[v][k]){
+          if(g->caracteristicas[i][j] == g->caracteristicas[k][j] && g->caracteristicas[i][j] != -1){
+            valores[i]++;
+          }
+        }    
+      }
+    }
+  }
 }
 
 /* Funcao que calcula o numero de amigos em comum entre o vertice v e os demais */
@@ -342,6 +364,9 @@ int main(){
 	double* valoresReais = (double*)malloc(sizeof(double)*5);
 	raridade(&g1, 0, valoresReais);
 	exibeArranjoReais(valoresReais, 5);
+
+  influenciaSocial(&g1, 1, valoresInteiros);
+  exibeArranjoInteiros(valoresInteiros, 5);
 	
   exibeGrafo(&g1);
   liberaGrafo(&g1);
