@@ -238,7 +238,7 @@ void raridade(Grafo* g, int v, double* valores) {
 
 	int* repeticoes = (int*)calloc(NUM_CARACT, sizeof(int)); // conta a quantidade de repetições que o valor da característica y tem entre o vertice v e os outros
 	for(int j = 0; j < NUM_CARACT; j++){	//	roda a matriz verticalmente
-		for(int i = 0; i < g->numArestas; i++){
+		for(int i = 0; i < g->numVertices; i++){
 			if(g->caracteristicas[v][j] == g->caracteristicas[i][j] && g->caracteristicas[i][j] > -1){
 				repeticoes[j]++;
 			}	
@@ -321,58 +321,58 @@ void testaFuncoes(Grafo* g, int n, int v){
   free(valoresReais);
 }
 
-int main(){
-  Grafo g1;
-  inicializaGrafo(&g1, 5);
-	insereAresta(&g1,0,1);
-  insereAresta(&g1,0,2);
-  insereAresta(&g1,1,4);
-  insereAresta(&g1,1,3);
-  insereAresta(&g1,2,3);
-  atualizaCaracteristica(&g1, 0, 2, 2);
-  atualizaCaracteristica(&g1, 0, 1, 1);
-  atualizaCaracteristica(&g1, 0, 5, 10);
-  atualizaCaracteristica(&g1, 0, 7, 2);
-  atualizaCaracteristica(&g1, 1, 1, 1);
-  atualizaCaracteristica(&g1, 1, 2, 2);
-  atualizaCaracteristica(&g1, 1, 3, 3);
-  atualizaCaracteristica(&g1, 1, 5, 11);
-  atualizaCaracteristica(&g1, 1, 7, 2);
-  atualizaCaracteristica(&g1, 2, 0, 7);
-  atualizaCaracteristica(&g1, 2, 2, 2);
-  atualizaCaracteristica(&g1, 2, 6, 6);
-  atualizaCaracteristica(&g1, 2, 8, 4);
-  atualizaCaracteristica(&g1, 2, 5, 10);
-  atualizaCaracteristica(&g1, 3, 0, 7);
-  atualizaCaracteristica(&g1, 3, 2, 9);
-  atualizaCaracteristica(&g1, 3, 8, 4);
-  atualizaCaracteristica(&g1, 3, 5, 11);
-  atualizaCaracteristica(&g1, 3, 6, 6);
-  atualizaCaracteristica(&g1, 3, 9, 0);
-  atualizaCaracteristica(&g1, 4, 3, 3);
-  atualizaCaracteristica(&g1, 4, 2, 5);
-  atualizaCaracteristica(&g1, 4, 4, 4);
-  atualizaCaracteristica(&g1, 4, 6, 4);
-  atualizaCaracteristica(&g1, 4, 7, 2);
-  atualizaCaracteristica(&g1, 4, 5, 11);
-  atualizaCaracteristica(&g1, 4, 9, 0);
+// int main(){
+//   Grafo g1;
+//   inicializaGrafo(&g1, 5);
+// 	insereAresta(&g1,0,1);
+//   insereAresta(&g1,0,2);
+//   insereAresta(&g1,1,4);
+//   insereAresta(&g1,1,3);
+//   insereAresta(&g1,2,3);
+//   atualizaCaracteristica(&g1, 0, 2, 2);
+//   atualizaCaracteristica(&g1, 0, 1, 1);
+//   atualizaCaracteristica(&g1, 0, 5, 10);
+//   atualizaCaracteristica(&g1, 0, 7, 2);
+//   atualizaCaracteristica(&g1, 1, 1, 1);
+//   atualizaCaracteristica(&g1, 1, 2, 2);
+//   atualizaCaracteristica(&g1, 1, 3, 3);
+//   atualizaCaracteristica(&g1, 1, 5, 11);
+//   atualizaCaracteristica(&g1, 1, 7, 2);
+//   atualizaCaracteristica(&g1, 2, 0, 7);
+//   atualizaCaracteristica(&g1, 2, 2, 2);
+//   atualizaCaracteristica(&g1, 2, 6, 6);
+//   atualizaCaracteristica(&g1, 2, 8, 4);
+//   atualizaCaracteristica(&g1, 2, 5, 10);
+//   atualizaCaracteristica(&g1, 3, 0, 7);
+//   atualizaCaracteristica(&g1, 3, 2, 9);
+//   atualizaCaracteristica(&g1, 3, 8, 4);
+//   atualizaCaracteristica(&g1, 3, 5, 11);
+//   atualizaCaracteristica(&g1, 3, 6, 6);
+//   atualizaCaracteristica(&g1, 3, 9, 0);
+//   atualizaCaracteristica(&g1, 4, 3, 3);
+//   atualizaCaracteristica(&g1, 4, 2, 5);
+//   atualizaCaracteristica(&g1, 4, 4, 4);
+//   atualizaCaracteristica(&g1, 4, 6, 4);
+//   atualizaCaracteristica(&g1, 4, 7, 2);
+//   atualizaCaracteristica(&g1, 4, 5, 11);
+//   atualizaCaracteristica(&g1, 4, 9, 0);
 	
-	int* valoresInteiros = (int*)malloc(sizeof(int)*5);
-	homofilia(&g1, 3, valoresInteiros);
-	exibeArranjoInteiros(valoresInteiros, 5);
+// 	int* valoresInteiros = (int*)malloc(sizeof(int)*5);
+// 	homofilia(&g1, 3, valoresInteiros);
+// 	exibeArranjoInteiros(valoresInteiros, 5);
 	
-	double* valoresReais = (double*)malloc(sizeof(double)*5);
-	raridade(&g1, 0, valoresReais);
-	exibeArranjoReais(valoresReais, 5);
+// 	double* valoresReais = (double*)malloc(sizeof(double)*5);
+// 	raridade(&g1, 0, valoresReais);
+// 	exibeArranjoReais(valoresReais, 5);
 
-  influenciaSocial(&g1, 1, valoresInteiros);
-  exibeArranjoInteiros(valoresInteiros, 5);
+//   influenciaSocial(&g1, 1, valoresInteiros);
+//   exibeArranjoInteiros(valoresInteiros, 5);
 	
-  exibeGrafo(&g1);
-  liberaGrafo(&g1);
-}
+//   exibeGrafo(&g1);
+//   liberaGrafo(&g1);
+// }
 
-/*int main() {
+int main() {
   int n = 5;
   int* valoresInteiros = (int*)malloc(sizeof(int)*n);
   double* valoresReais = (double*)malloc(sizeof(double)*n);
@@ -419,4 +419,4 @@ int main(){
 	liberaGrafo(&g1);
   liberaGrafo(g2);
   return 0;  
-}*/
+}
