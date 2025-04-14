@@ -210,11 +210,6 @@ void homofiliaPonderada(Grafo* g, int v, double* valores, int* pesos){
   }
 }
 
-int* caracteristicaVizinhosGrauUm(Grafo* g, int v, int i, int* pesos){
-  //se eu receber i = 0, eu tenho q preencher 'pesos' com a quantidade de vizinhos de v que tem a mesma característica de 0
-  
-}
-
 /* --------------------------------------------------------------------------------------------------------------- */
 
 void homofilia(Grafo* g, int v, int* valores) {
@@ -248,14 +243,9 @@ void raridade(Grafo* g, int v, double* valores) {
 	homofiliaPonderada(g, v , valores, repeticoes);
 }  
 
-/* Funcao que da mais pesos as caracteristicas mais presentes nos amigos do vertice v e calcula a influencia social entre o vertice v e os demais */
-// AINDA NÃO TÁ CERTA!!!!!!!!!!!!!
 void influenciaSocial(Grafo* g, int v, int* valores) {
   if(g == NULL || v >= g->numVertices || valores == NULL) return;
 	zerarArray(valores, g->numVertices);
-
-  int* caract_vizinhos = (int*)calloc(g->numVertices, sizeof(int));
-  int vizinho_anterior = 0;
 
   for(int i = 0; i < g->numVertices; i++){  // a posição "fixa" q eu vou preencher o array 'valores'
     for(int j = 0; j < 10; j++){  
@@ -270,9 +260,19 @@ void influenciaSocial(Grafo* g, int v, int* valores) {
   }
 }
 
-/* Funcao que calcula o numero de amigos em comum entre o vertice v e os demais */
 void amizadesEmComum(Grafo* g, int v, int* valores) {
-  /* COMPLETE/IMPLEMENTE ESTA FUNCAO */
+  if(g == NULL || v >= g->numVertices || valores == NULL) return;
+	zerarArray(valores, g->numVertices);
+
+  for(int i = 0; i < g->numVertices; i++){
+    for(int j = 0; j < g->numVertices; j++){
+      if(g->matriz[i][j]){
+        if(g->matriz[v][j]){
+          valores[i]++;
+        }
+      }
+    }
+  }
 }
 
 /* Funcao que calcula a distancia entre o vertice v e os demais */
@@ -280,9 +280,18 @@ void proximidadeSocial(Grafo* g, int v, int* valores) {
   /* COMPLETE/IMPLEMENTE ESTA FUNCAO */
 }
 
-/* Funcao que usa o principio da conexao preferencial e calcula o grau de cada vertice */
 void conexaoPreferencial(Grafo* g, int v, int* valores) {
-  /* COMPLETE/IMPLEMENTE ESTA FUNCAO */
+  // o vertice v em específico não importa aqui
+  if(g == NULL || v >= g->numVertices || valores == NULL) return;
+	zerarArray(valores, g->numVertices);
+
+  for(int i = 0; i < g->numVertices; i++){
+    for(int j = 0; j < g->numVertices; j++){
+      if(g->matriz[i][j]){
+        valores[i]++;
+      }
+    }
+  }
 }
 
 /* -------------------------------------------------------------------------------------------------------------- */
@@ -321,58 +330,71 @@ void testaFuncoes(Grafo* g, int n, int v){
   free(valoresReais);
 }
 
-// int main(){
-//   Grafo g1;
-//   inicializaGrafo(&g1, 5);
-// 	insereAresta(&g1,0,1);
-//   insereAresta(&g1,0,2);
-//   insereAresta(&g1,1,4);
-//   insereAresta(&g1,1,3);
-//   insereAresta(&g1,2,3);
-//   atualizaCaracteristica(&g1, 0, 2, 2);
-//   atualizaCaracteristica(&g1, 0, 1, 1);
-//   atualizaCaracteristica(&g1, 0, 5, 10);
-//   atualizaCaracteristica(&g1, 0, 7, 2);
-//   atualizaCaracteristica(&g1, 1, 1, 1);
-//   atualizaCaracteristica(&g1, 1, 2, 2);
-//   atualizaCaracteristica(&g1, 1, 3, 3);
-//   atualizaCaracteristica(&g1, 1, 5, 11);
-//   atualizaCaracteristica(&g1, 1, 7, 2);
-//   atualizaCaracteristica(&g1, 2, 0, 7);
-//   atualizaCaracteristica(&g1, 2, 2, 2);
-//   atualizaCaracteristica(&g1, 2, 6, 6);
-//   atualizaCaracteristica(&g1, 2, 8, 4);
-//   atualizaCaracteristica(&g1, 2, 5, 10);
-//   atualizaCaracteristica(&g1, 3, 0, 7);
-//   atualizaCaracteristica(&g1, 3, 2, 9);
-//   atualizaCaracteristica(&g1, 3, 8, 4);
-//   atualizaCaracteristica(&g1, 3, 5, 11);
-//   atualizaCaracteristica(&g1, 3, 6, 6);
-//   atualizaCaracteristica(&g1, 3, 9, 0);
-//   atualizaCaracteristica(&g1, 4, 3, 3);
-//   atualizaCaracteristica(&g1, 4, 2, 5);
-//   atualizaCaracteristica(&g1, 4, 4, 4);
-//   atualizaCaracteristica(&g1, 4, 6, 4);
-//   atualizaCaracteristica(&g1, 4, 7, 2);
-//   atualizaCaracteristica(&g1, 4, 5, 11);
-//   atualizaCaracteristica(&g1, 4, 9, 0);
-	
-// 	int* valoresInteiros = (int*)malloc(sizeof(int)*5);
-// 	homofilia(&g1, 3, valoresInteiros);
-// 	exibeArranjoInteiros(valoresInteiros, 5);
-	
-// 	double* valoresReais = (double*)malloc(sizeof(double)*5);
-// 	raridade(&g1, 0, valoresReais);
-// 	exibeArranjoReais(valoresReais, 5);
+int main(){
+  Grafo g1;
+  int* valoresInteiros = (int*)malloc(sizeof(int)*5);
+  double* valoresReais = (double*)malloc(sizeof(double)*5);
+  inicializaGrafo(&g1, 5);
 
-//   influenciaSocial(&g1, 1, valoresInteiros);
-//   exibeArranjoInteiros(valoresInteiros, 5);
+	insereAresta(&g1,0,1);
+  insereAresta(&g1,0,2);
+  insereAresta(&g1,1,4);
+  insereAresta(&g1,1,3);
+  insereAresta(&g1,2,3);
+  insereAresta(&g1,0,3);
+  atualizaCaracteristica(&g1, 0, 2, 2);
+  atualizaCaracteristica(&g1, 0, 1, 1);
+  atualizaCaracteristica(&g1, 0, 5, 10);
+  atualizaCaracteristica(&g1, 0, 7, 2);
+  atualizaCaracteristica(&g1, 1, 1, 1);
+  atualizaCaracteristica(&g1, 1, 2, 2);
+  atualizaCaracteristica(&g1, 1, 3, 3);
+  atualizaCaracteristica(&g1, 1, 5, 11);
+  atualizaCaracteristica(&g1, 1, 7, 2);
+  atualizaCaracteristica(&g1, 2, 0, 7);
+  atualizaCaracteristica(&g1, 2, 2, 2);
+  atualizaCaracteristica(&g1, 2, 6, 6);
+  atualizaCaracteristica(&g1, 2, 8, 4);
+  atualizaCaracteristica(&g1, 2, 5, 10);
+  atualizaCaracteristica(&g1, 3, 0, 7);
+  atualizaCaracteristica(&g1, 3, 2, 9);
+  atualizaCaracteristica(&g1, 3, 8, 4);
+  atualizaCaracteristica(&g1, 3, 5, 11);
+  atualizaCaracteristica(&g1, 3, 6, 6);
+  atualizaCaracteristica(&g1, 3, 9, 0);
+  atualizaCaracteristica(&g1, 4, 3, 3);
+  atualizaCaracteristica(&g1, 4, 2, 5);
+  atualizaCaracteristica(&g1, 4, 4, 4);
+  atualizaCaracteristica(&g1, 4, 6, 4);
+  atualizaCaracteristica(&g1, 4, 7, 2);
+  atualizaCaracteristica(&g1, 4, 5, 11);
+  atualizaCaracteristica(&g1, 4, 9, 0);
 	
-//   exibeGrafo(&g1);
-//   liberaGrafo(&g1);
-// }
+	homofilia(&g1, 3, valoresInteiros);
+	exibeArranjoInteiros(valoresInteiros, 5);
+	
+	raridade(&g1, 0, valoresReais);
+	exibeArranjoReais(valoresReais, 5);
 
-int main() {
+  influenciaSocial(&g1, 0, valoresInteiros);
+  exibeArranjoInteiros(valoresInteiros, 5);
+
+  amizadesEmComum(&g1, 0, valoresInteiros);
+  exibeArranjoInteiros(valoresInteiros, 5);
+
+  proximidadeSocial(&g1, 0, valoresInteiros);
+  exibeArranjoInteiros(valoresInteiros, 5);
+
+  conexaoPreferencial(&g1, 0, valoresInteiros);
+  exibeArranjoInteiros(valoresInteiros, 5);
+	
+  exibeGrafo(&g1);
+  liberaGrafo(&g1);
+  free(valoresInteiros);
+  free(valoresReais);
+}
+
+/*int main() {
   int n = 5;
   int* valoresInteiros = (int*)malloc(sizeof(int)*n);
   double* valoresReais = (double*)malloc(sizeof(double)*n);
@@ -420,3 +442,4 @@ int main() {
   liberaGrafo(g2);
   return 0;  
 }
+*/
