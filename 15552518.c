@@ -28,6 +28,16 @@ typedef struct {
     int** caracteristicas;  // matriz de características de cada usuário -> são v vertices por 10 caracteristicas (fixo)  
 } Grafo;
 
+typedef struct aux{
+  int valor;
+  struct aux* prox;
+} No;
+typedef struct{
+  No* inicio;
+  No* fim;
+} Fila;
+
+
 void printf123(){
     // Funcao usada pelo sistema de correcao automatica (nao mexer)
 }
@@ -210,6 +220,43 @@ void homofiliaPonderada(Grafo* g, int v, double* valores, int* pesos){
   }
 }
 
+void inicializarFila(Fila* f){
+  f->fim = NULL;
+  f->inicio = NULL;
+}
+
+bool filaTaVazia(Fila* f){
+  if(f->inicio == NULL)
+    return true;
+  else
+    return false;
+}
+
+void inserirFila(Fila* f, int valor){
+  if(!f) return;
+  No* novo = (No*)malloc(sizeof(No));
+  novo->valor = valor;
+  novo->prox = NULL;
+  if(f->inicio == NULL){
+    f->inicio = novo;
+    f->fim = novo;
+  }
+  else{
+    f->fim->prox = novo;
+    f->fim = novo;
+  }
+}
+
+int excluirFila(Fila* f){
+  if(f == NULL) return -1;
+  if(filaTaVazia(f)) return -1;
+  int valor = f->inicio->valor;
+  f->inicio = f->inicio->prox;
+  if(f->inicio == NULL)
+    f->fim == NULL;
+  return valor;
+}
+
 /* --------------------------------------------------------------------------------------------------------------- */
 
 void homofilia(Grafo* g, int v, int* valores) {
@@ -275,9 +322,47 @@ void amizadesEmComum(Grafo* g, int v, int* valores) {
   }
 }
 
-/* Funcao que calcula a distancia entre o vertice v e os demais */
 void proximidadeSocial(Grafo* g, int v, int* valores) {
-  /* COMPLETE/IMPLEMENTE ESTA FUNCAO */
+  if(g == NULL || v >= g->numVertices || valores == NULL) return;
+  for(int j = 0; j < g->numVertices; j++) // inicia o array de valores com -1 (vamos usar isso direto ao invés de um array "visitados")
+    valores[j] = -1;
+
+  int distancia = 1;
+  int qtNosCamadaAtual = 1;
+  int qtNosProximaCamada = 0;
+  int atual;
+  Fila filaDeExecucao;
+
+  inicializarFila(&filaDeExecucao);
+  inserirFila(&filaDeExecucao, v);
+  valores[v] = 0;
+
+  while(!filaTaVazia(&filaDeExecucao)){
+    atual = excluirFila(&filaDeExecucao);
+    qtNosCamadaAtual--;
+
+    for(int i = 0; i < g->numVertices; i++){
+      if(valores[i] == -1 && g->matriz[atual][i]){    // verifica se foi visitado (distancia atribuida) e se existe relação
+        inserirFila(&filaDeExecucao, i);              // coloca na fila pra ser o "atual" e atualiza a distancia
+        valores[i] = distancia;
+        qtNosProximaCamada++;
+      }
+    }
+
+    if(qtNosCamadaAtual == 0){    // verifica se acabou os vertices dessa camada, se acabou, vai pra proxima e aumenta a distancia
+      if(qtNosProximaCamada > 0){
+        distancia++;
+        qtNosCamadaAtual = qtNosProximaCamada;
+        qtNosProximaCamada = 0;
+      }
+    }
+  }
+
+  for(int k = 0; k < g->numVertices; k++){  // para os vertices nao alcançados (que ficaram com dist -1) - membros desconexos
+    if(valores[k] == -1){
+      valores[k] = g->numVertices;          // atualiza a dist deles para numero de vertices do grafo
+    }
+  }
 }
 
 void conexaoPreferencial(Grafo* g, int v, int* valores) {
@@ -330,7 +415,7 @@ void testaFuncoes(Grafo* g, int n, int v){
   free(valoresReais);
 }
 
-int main(){
+/*int main(){
   Grafo g1;
   int* valoresInteiros = (int*)malloc(sizeof(int)*5);
   double* valoresReais = (double*)malloc(sizeof(double)*5);
@@ -382,7 +467,7 @@ int main(){
   amizadesEmComum(&g1, 0, valoresInteiros);
   exibeArranjoInteiros(valoresInteiros, 5);
 
-  proximidadeSocial(&g1, 0, valoresInteiros);
+  proximidadeSocial(&g1, 2, valoresInteiros);
   exibeArranjoInteiros(valoresInteiros, 5);
 
   conexaoPreferencial(&g1, 0, valoresInteiros);
@@ -392,9 +477,11 @@ int main(){
   liberaGrafo(&g1);
   free(valoresInteiros);
   free(valoresReais);
-}
 
-/*int main() {
+  return 0
+}*/
+
+int main() {
   int n = 5;
   int* valoresInteiros = (int*)malloc(sizeof(int)*n);
   double* valoresReais = (double*)malloc(sizeof(double)*n);
@@ -436,10 +523,9 @@ int main(){
   int arestas = 8;
   Grafo* g2 = criaGrafoAleatorio(n,arestas);
   exibeGrafo(g2);
-  testaFuncoes(g2, n, 1);
+  testaFuncoes(g2, n, 4);
 
 	liberaGrafo(&g1);
   liberaGrafo(g2);
   return 0;  
 }
-*/
